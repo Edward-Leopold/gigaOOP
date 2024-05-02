@@ -5,9 +5,7 @@ import uuid
 
 class User:
     def __init__(self, login, password, email):
-        self.login = login
-        self.password = password
-        self.email = email
+        self.login, self.password, self.email = login, password, email
         self.uuid = self.generate_uuid()
         self.login_hash = self.hash_login()
         self.password_hash = self.hash_password()
