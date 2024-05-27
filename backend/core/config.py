@@ -1,6 +1,6 @@
 class Settings:
     PROJECT_NAME: str = "gigaOOP"
-    PROJECT_VERSION: str = "0.5.0"
+    PROJECT_VERSION: str = "1.0.0"
 
     SQLITE_DB = "/./gigaOOP_database.db"
     DATABASE_URL = f"sqlite+aiosqlite://{SQLITE_DB}"

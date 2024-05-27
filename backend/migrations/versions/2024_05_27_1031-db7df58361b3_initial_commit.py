@@ -36,16 +36,12 @@ def upgrade() -> None:
         unique=False,
     )
     op.create_index(op.f("ix_courses_id"), "courses", ["id"], unique=False)
-    op.create_index(
-        op.f("ix_courses_title"), "courses", ["title"], unique=False
-    )
+    op.create_index(op.f("ix_courses_title"), "courses", ["title"], unique=False)
     op.create_table(
         "user",
         sa.Column("name", sa.String(length=320), nullable=True),
         sa.Column("status", sa.Integer(), nullable=False),
-        sa.Column(
-            "id", fastapi_users_db_sqlalchemy.generics.GUID(), nullable=False
-        ),
+        sa.Column("id", fastapi_users_db_sqlalchemy.generics.GUID(), nullable=False),
         sa.Column("email", sa.String(length=320), nullable=False),
         sa.Column("hashed_password", sa.String(length=1024), nullable=False),
         sa.Column("is_active", sa.Boolean(), nullable=False),
@@ -66,9 +62,7 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index(
-        op.f("ix_themes_content"), "themes", ["content"], unique=False
-    )
+    op.create_index(op.f("ix_themes_content"), "themes", ["content"], unique=False)
     op.create_index(op.f("ix_themes_id"), "themes", ["id"], unique=False)
     op.create_index(op.f("ix_themes_title"), "themes", ["title"], unique=False)
     op.create_table(
@@ -90,9 +84,7 @@ def upgrade() -> None:
         unique=False,
     )
     op.create_index(op.f("ix_quizzes_id"), "quizzes", ["id"], unique=False)
-    op.create_index(
-        op.f("ix_quizzes_title"), "quizzes", ["title"], unique=False
-    )
+    op.create_index(op.f("ix_quizzes_title"), "quizzes", ["title"], unique=False)
     op.create_table(
         "questions",
         sa.Column("id", sa.Integer(), nullable=False),
