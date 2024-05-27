@@ -3,8 +3,3 @@ from db.models.user import User
 from db.models.course import Course
 from db.models.theme import Theme
 from db.models.quiz import Quiz, QuizQuestion, QuizQuestionAnswer
-
-
-# async def create_db_and_tables():
-#     async with engine.begin() as conn:
-#         await conn.run_sync(Base.metadata.create_all)

@@ -7,7 +7,7 @@ from main import app
 from db.session import Base, get_async_session
 from db.base import Base
 
-TEST_DATABASE_URL = 'sqlite+aiosqlite:///backend/test.db'
+TEST_DATABASE_URL = 'sqlite+aiosqlite:///./test.db'
 
 engine = create_async_engine(TEST_DATABASE_URL, connect_args={'check_same_thread': False})
 TestingSessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)

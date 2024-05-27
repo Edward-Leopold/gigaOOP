@@ -1,9 +1,15 @@
-from fastapi_users.authentication import AuthenticationBackend, CookieTransport, JWTStrategy
+from fastapi_users.authentication import (
+    AuthenticationBackend,
+    CookieTransport,
+    JWTStrategy,
+)
 
 from .config import settings
 
 
-cookie_transport = CookieTransport(cookie_name='auth', cookie_max_age=3600, cookie_path='/', cookie_secure=False)
+cookie_transport = CookieTransport(
+    cookie_name="auth", cookie_max_age=3600, cookie_path="/", cookie_secure=False
+)
 
 
 def get_jwt_strategy() -> JWTStrategy:

@@ -18,13 +18,17 @@ async def create_quiz(quiz: QuizCreate, db: AsyncSession = Depends(get_db)):
         await session.refresh(new_quiz)
 
         for question in quiz.questions:
-            new_question = QuizQuestion(**question.dict(exclude={"answers"}), quiz_id=new_quiz.id)
+            new_question = QuizQuestion(
+                **question.dict(exclude={"answers"}), quiz_id=new_quiz.id
+            )
             session.add(new_question)
             await session.commit()
             await session.refresh(new_question)
 
             for answer in question.answers:
-                new_answer = QuizQuestionAnswer(**answer.dict(), question_id=new_question.id)
+                new_answer = QuizQuestionAnswer(
+                    **answer.dict(), question_id=new_question.id
+                )
                 session.add(new_answer)
 
         await session.commit()
@@ -36,9 +40,7 @@ async def create_quiz(quiz: QuizCreate, db: AsyncSession = Depends(get_db)):
 @router.get("/{quiz_id}", response_model=QuizRead)
 async def read_quiz(quiz_id: int, db: AsyncSession = Depends(get_db)):
     async with db as session:
-        result = await session.execute(
-            select(Quiz).where(Quiz.id == quiz_id)
-        )
+        result = await session.execute(select(Quiz).where(Quiz.id == quiz_id))
         quiz = result.scalars().first()
         if not quiz:
             raise HTTPException(status_code=404, detail="Quiz not found")
@@ -50,7 +52,9 @@ async def read_quiz(quiz_id: int, db: AsyncSession = Depends(get_db)):
 
         for question in questions:
             result_answers = await session.execute(
-                select(QuizQuestionAnswer).where(QuizQuestionAnswer.question_id == question.id)
+                select(QuizQuestionAnswer).where(
+                    QuizQuestionAnswer.question_id == question.id
+                )
             )
             question.answers = result_answers.scalars().all()
 
@@ -59,11 +63,11 @@ async def read_quiz(quiz_id: int, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/", response_model=list[QuizRead])
-async def get_quizzes(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
+async def get_quizzes(
+    skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)
+):
     async with db as session:
-        result = await session.execute(
-            select(Quiz).offset(skip).limit(limit)
-        )
+        result = await session.execute(select(Quiz).offset(skip).limit(limit))
         quizzes = result.scalars().all()
 
         for quiz in quizzes:
@@ -74,7 +78,9 @@ async def get_quizzes(skip: int = 0, limit: int = 10, db: AsyncSession = Depends
 
             for question in questions:
                 result_answers = await session.execute(
-                    select(QuizQuestionAnswer).where(QuizQuestionAnswer.question_id == question.id)
+                    select(QuizQuestionAnswer).where(
+                        QuizQuestionAnswer.question_id == question.id
+                    )
                 )
                 question.answers = result_answers.scalars().all()
 
@@ -83,11 +89,11 @@ async def get_quizzes(skip: int = 0, limit: int = 10, db: AsyncSession = Depends
 
 
 @router.put("/{quiz_id}", response_model=QuizRead)
-async def update_quiz(quiz_id: int, quiz_update: QuizUpdate, db: AsyncSession = Depends(get_db)):
+async def update_quiz(
+    quiz_id: int, quiz_update: QuizUpdate, db: AsyncSession = Depends(get_db)
+):
     async with db as session:
-        result = await session.execute(
-            select(Quiz).where(Quiz.id == quiz_id)
-        )
+        result = await session.execute(select(Quiz).where(Quiz.id == quiz_id))
         quiz = result.scalars().first()
         if not quiz:
             raise HTTPException(status_code=404, detail="Quiz not found")
@@ -107,8 +113,10 @@ async def update_quiz(quiz_id: int, quiz_update: QuizUpdate, db: AsyncSession = 
                     await session.commit()
                     await session.refresh(new_question)
 
-                    for answer_data in question_data['answers']:
-                        new_answer = QuizQuestionAnswer(**answer_data, question_id=new_question.id)
+                    for answer_data in question_data["answers"]:
+                        new_answer = QuizQuestionAnswer(
+                            **answer_data, question_id=new_question.id
+                        )
                         session.add(new_answer)
             else:
                 setattr(quiz, key, value)
@@ -133,9 +141,13 @@ async def delete_quiz(quiz_id: int, db: AsyncSession = Depends(get_db)):
         await session.commit()
 
         await session.execute(
-            select(QuizQuestionAnswer).where(QuizQuestionAnswer.question_id.in_(
-                select(QuizQuestion.id).where(QuizQuestion.quiz_id == quiz.id)
-            )).delete()
+            select(QuizQuestionAnswer)
+            .where(
+                QuizQuestionAnswer.question_id.in_(
+                    select(QuizQuestion.id).where(QuizQuestion.quiz_id == quiz.id)
+                )
+            )
+            .delete()
         )
         await session.commit()
 
